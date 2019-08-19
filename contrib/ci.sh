@@ -75,5 +75,12 @@ export OPENFAAS_URL=http://127.0.0.1:8080/
 cd $GOPATH/src/github.com/openfaas/certifier && \
    make test-swarm
 
+if [ ! -z "$TRAVIS_BUILD_DIR" ] ; then
+  echo Running OpenAPI linter on gateway spec
+  APIDOCS="$TRAVIS_BUILD_DIR/api-docs/swagger.yml"
+  echo "API Doc Path: $APIDOCS"
+  docker run -it --rm -v $APIDOCS:$APIDOCS stoplight/spectral:latest lint $APIDOCS
+fi
+
 echo Integration tests all PASSED
 exit 0
